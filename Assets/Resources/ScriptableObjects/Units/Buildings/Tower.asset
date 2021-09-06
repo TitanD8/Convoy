@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e75af83d5f47be488293b2126366498, type: 3}
+  m_Name: Tower
+  m_EditorClassIdentifier: 
+  code: tower
+  unitName: Tower
+  healthpoints: 100
+  prefab: {fileID: 2869076998113401671, guid: 846a912d37cb1d84eb21bbdbb81dcddb, type: 3}
+  cost:
+  - code: stone
+    amount: 100
+  - code: wood
+    amount: 100
