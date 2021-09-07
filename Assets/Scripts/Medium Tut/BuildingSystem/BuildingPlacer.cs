@@ -90,10 +90,10 @@ public class BuildingPlacer : MonoBehaviour
         {
             _placedBuilding = null;
         }
-        _uIManager.UpdateResourceTexts();
-        _uIManager.CheckBuildingButtons();
-        //EventManager.TriggerEvent("UpdateResourceTexts");
-        //EventManager.TriggerEvent("CheckBuildingButtons");
+        //_uIManager.UpdateResourceTexts();
+        //_uIManager.CheckBuildingButtons();
+        EventManager.TriggerEvent("UpdateResourceTexts");
+        EventManager.TriggerEvent("CheckBuildingButtons");
     }
 
     void _CancelPlacedBuilding()
