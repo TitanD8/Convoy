@@ -99,21 +99,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 4239928428773882677}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e93ccb699000024496d67a24576554c, type: 3}
+  m_Script: {fileID: 11500000, guid: aa54d05ea571dca40a3251f70d7d1f60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 4239928428773882675}
   gradient:
     serializedVersion: 2
-    key0: {r: 0.9528302, g: 0.06756515, b: 0.05842829, a: 1}
-    key1: {r: 1, g: 0.95339686, b: 0.051886797, a: 1}
-    key2: {r: 0.023869962, g: 0.9716981, b: 0.022917405, a: 0}
+    key0: {r: 0.98039216, g: 0.059261125, b: 0.015686247, a: 1}
+    key1: {r: 0.9811321, g: 0.85456634, b: 0.013883919, a: 1}
+    key2: {r: 0.09531862, g: 0.9622642, b: 0.26019004, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 22937
+    ctime0: 19661
     ctime1: 45875
     ctime2: 65535
     ctime3: 0
@@ -222,7 +222,6 @@ GameObject:
   - component: {fileID: 4239928429906492608}
   - component: {fileID: 4239928429906492611}
   - component: {fileID: 889340253}
-  - component: {fileID: 5538931259408485761}
   m_Layer: 5
   m_Name: HealthBarCanvas
   m_TagString: Untagged
@@ -293,7 +292,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &4239928429906492611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,19 +311,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
 --- !u!114 &889340253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4239928429906492613}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36c3cbba05fb16e4c8225127ad32514a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cam: {fileID: 0}
---- !u!114 &5538931259408485761
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
