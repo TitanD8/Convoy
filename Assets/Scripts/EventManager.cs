@@ -107,7 +107,6 @@ public class EventManager : MonoBehaviour
 public class CustomEventData
 {
     public BuildingData buildingData;
-    public int buildingID;
 
     public CustomEventData(BuildingData buildingData)
     {

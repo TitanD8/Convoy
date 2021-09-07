@@ -6,6 +6,7 @@ using UnityEngine;
 {
     public string code;
     public string unitName;
+    public string description;
     public int healthpoints;
     public GameObject prefab;
     public List<ResourceValue> cost;

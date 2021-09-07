@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   code: House
   unitName: House
+  description: A house increases your population limit by 5
   healthpoints: 50
   prefab: {fileID: 2869076998113401671, guid: 78e61d03ebdf18f48849dfccc154b756, type: 3}
   cost:

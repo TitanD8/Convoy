@@ -106,7 +106,6 @@ public class Building
         // remove 'isTrigger' flag from box collider to allow
         // for collisions with units
         _transform.GetComponent<BoxCollider>().isTrigger = false;
-
         // update game resources: remove the cost of the building
         // from each game resource
         foreach (ResourceValue resource in _data.cost)

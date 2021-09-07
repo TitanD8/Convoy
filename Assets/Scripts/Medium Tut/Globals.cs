@@ -9,9 +9,9 @@ public class Globals
 
     public static Dictionary<string, GameResource> GAME_RESOURCES = new Dictionary<string, GameResource>()
     {
-        {"gold", new GameResource("Gold", 1000) },
-        {"wood", new GameResource("Wood", 1000) },
-        {"stone", new GameResource("Stone", 1000) }
+        {"gold", new GameResource("gold", 1000) },
+        {"wood", new GameResource("wood", 1000) },
+        {"stone", new GameResource("stone", 1000) }
     };
 
     public static List<UnitManager> SELECTED_UNITS = new List<UnitManager>();

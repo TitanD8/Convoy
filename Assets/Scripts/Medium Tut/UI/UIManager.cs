@@ -14,6 +14,14 @@ public class UIManager : MonoBehaviour
     public Transform resourcesUIParent;
     public GameObject gameResourceDisplayPrefab;
 
+    [Header("UnitInfoPanel")]
+    public GameObject infoPanel;
+    public Color invalidTextColor;
+    private Text _infoPanelTitleText;
+    private Text _infoPanelDescriptionText;
+    private Transform _infoPanelResourcesCostParent;
+    public GameObject gameResourceCostPrefab;
+
     private Dictionary<string, Text> _resourceTexts;
     private Dictionary<string, Button> _buildingButtons;
 
@@ -21,12 +29,16 @@ public class UIManager : MonoBehaviour
     {
         EventManager.AddListener("UpdateResourceTexts", _OnUpdateResourceTexts);
         EventManager.AddListener("CheckBuildingButtons", _OnCheckBuildingButtons);
+        EventManager.AddTypedListener("HoverBuildingButton", _OnHoverBuildingButton);
+        EventManager.AddListener("UnhoverBuildingButton", _OnUnhoverBuildingButton);
     }
 
     private void OnDisable()
     {
         EventManager.RemoveListener("UpdateResourceTexts", _OnUpdateResourceTexts);
         EventManager.RemoveListener("CheckBuildingButtons", _OnCheckBuildingButtons);
+        EventManager.RemoveTypedListener("HoverBuildingButton", _OnHoverBuildingButton);
+        EventManager.RemoveListener("UnhoverBuildingButton", _OnUnhoverBuildingButton);
     }
 
     // Start is called before the first frame update
@@ -34,12 +46,20 @@ public class UIManager : MonoBehaviour
     {
         _buildingPlacer = GetComponent<BuildingPlacer>();
 
+        // Creates text for each in-game resource (info panel)
+        Transform infoPanelTransform = infoPanel.transform;
+        _infoPanelTitleText = infoPanelTransform.Find("Content/Title").GetComponent<Text>();
+        _infoPanelDescriptionText = infoPanelTransform.Find("Content/Description").GetComponent<Text>();
+        _infoPanelResourcesCostParent = infoPanelTransform.Find("Content/ResourcesCost");
+        _ShowInfoPanel(false);
+
         //Create texts for each in-game resource (gold, wood, stone)
         _resourceTexts = new Dictionary<string, Text>();
         foreach(KeyValuePair<string, GameResource> pair in Globals.GAME_RESOURCES)
         {
             GameObject display = Instantiate(gameResourceDisplayPrefab);
             display.name = pair.Key;
+            display.transform.Find("Icon").GetComponent<Image>().sprite = Resources.Load<Sprite>($"Textures/GameResources/{pair.Key}");
             _resourceTexts[pair.Key] = display.transform.Find("Text").GetComponent<Text>();
             _SetResourceText(pair.Key, pair.Value.Amount);
             display.transform.SetParent(resourcesUIParent);
@@ -63,8 +83,46 @@ public class UIManager : MonoBehaviour
             {
                 b.interactable = false;
             }
+            button.GetComponent<BuildingButton>().Initialize(Globals.BUILDING_DATA[i]);
         }
         
+    }
+
+    public void _SetInfoPanel(BuildingData data)
+    {
+        // update texts
+        if (data.code != "") { _infoPanelTitleText.text = data.unitName; }
+        if (data.description != "") { _infoPanelDescriptionText.text = data.description; }
+
+        //clear resource costs and reinstantiate new ones
+        foreach(Transform child in _infoPanelResourcesCostParent) { Destroy(child.gameObject); }
+        if(data.cost.Count > 0)
+        {
+            GameObject g;
+            Transform t;
+            foreach(ResourceValue resource in data.cost)
+            {
+                g = Instantiate(gameResourceCostPrefab) as GameObject;
+                t = g.transform;
+                t.Find("Text").GetComponent<Text>().text = resource.amount.ToString();
+                t.Find("Icon").GetComponent<Image>().sprite = Resources.Load<Sprite>($"Textures/GameResources/{resource.code}");
+                t.SetParent(_infoPanelResourcesCostParent);
+
+                // checks to see if resource requirments is not 
+                // currently met - in that case, turn the text into the 'invalid"
+                // color.
+                if (Globals.GAME_RESOURCES[resource.code].Amount < resource.amount)
+                {
+                    t.Find("Text").GetComponent<Text>().color = invalidTextColor;
+                }
+            }
+        }
+
+        
+    }
+    public void _ShowInfoPanel(bool show)
+    {
+        infoPanel.SetActive(show);
     }
 
     private void _OnCheckBuildingButtons()
@@ -80,6 +138,16 @@ public class UIManager : MonoBehaviour
         _resourceTexts[resource].text = value.ToString();
     }
 
+    private void _OnHoverBuildingButton(CustomEventData data)
+    {
+        _SetInfoPanel(data.buildingData);
+        _ShowInfoPanel(true);
+    }
+
+    private void _OnUnhoverBuildingButton()
+    {
+        _ShowInfoPanel(false);
+    }
     private void _OnUpdateResourceTexts()
     {
         foreach(KeyValuePair<string, GameResource> pair in Globals.GAME_RESOURCES)
