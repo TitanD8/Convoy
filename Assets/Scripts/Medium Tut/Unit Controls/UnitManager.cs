@@ -4,13 +4,8 @@ using UnityEngine;
 
 public class UnitManager : MonoBehaviour
 {
-    public GameObject healthBar;
     private bool _hovered = false;
 
-    private void Awake()
-    {
-        healthBar.SetActive(false);
-    }
     private void OnMouseEnter()
     {
         _hovered = true;
@@ -40,7 +35,6 @@ public class UnitManager : MonoBehaviour
     {
         if (Globals.SELECTED_UNITS.Contains(this)) return;
         Globals.SELECTED_UNITS.Add(this);
-        healthBar.SetActive(true);
     }
 
     public void Select() { Select(false, false); }
@@ -82,13 +76,5 @@ public class UnitManager : MonoBehaviour
     {
         if (!Globals.SELECTED_UNITS.Contains(this)) return;
         Globals.SELECTED_UNITS.Remove(this);
-        healthBar.SetActive(false);
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-
 }
