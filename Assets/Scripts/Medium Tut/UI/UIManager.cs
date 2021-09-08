@@ -88,10 +88,10 @@ public class UIManager : MonoBehaviour
         
     }
 
-    public void _SetInfoPanel(UnitData data)
+    public void _SetInfoPanel(BuildingData data)
     {
         // update texts
-        if (data.unitName != "") { _infoPanelTitleText.text = data.unitName; }
+        if (data.code != "") { _infoPanelTitleText.text = data.unitName; }
         if (data.description != "") { _infoPanelDescriptionText.text = data.description; }
 
         //clear resource costs and reinstantiate new ones
@@ -140,7 +140,7 @@ public class UIManager : MonoBehaviour
 
     private void _OnHoverBuildingButton(CustomEventData data)
     {
-        _SetInfoPanel(data.unitData);
+        _SetInfoPanel(data.buildingData);
         _ShowInfoPanel(true);
     }
 

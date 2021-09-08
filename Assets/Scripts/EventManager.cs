@@ -106,11 +106,11 @@ public class EventManager : MonoBehaviour
 
 public class CustomEventData
 {
-    public UnitData unitData;
+    public BuildingData buildingData;
 
-    public CustomEventData(UnitData unitData)
+    public CustomEventData(BuildingData buildingData)
     {
-        this.unitData = unitData;
+        this.buildingData = buildingData;
     }
 }
 
