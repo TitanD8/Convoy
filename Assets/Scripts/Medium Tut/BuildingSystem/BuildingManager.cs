@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider))]
 public class BuildingManager : UnitManager
 {
-    private BoxCollider _collider;
 
     private Building _building;
     private int _nCollisions = 0;
+    protected override Unit Unit
+    {
+        get { return _building; }
+        set { _building = value is Building ? (Building)value : null; }
+    }
 
     // Start is called before the first frame update
     void Start()

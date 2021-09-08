@@ -8,42 +8,18 @@ public enum BuildingPlacement
     FIXED
 };
 
-public class Building
+public class Building: Unit
 {
 
-    private BuildingData _data;
-    private Transform _transform;
-    private int _currentHealth;
     private BuildingPlacement _placement;
     private List<Material> _materials;
     private BuildingManager _buildingManager;
 
-    // Start is called before the first frame update
-    void Start()
+    public Building(BuildingData data) : this(data, new List<ResourceValue>() { }) { }
+    public Building(BuildingData data, List<ResourceValue> production) : base(data, production)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public Building(BuildingData data)
-    {
-        _data = data;
-        _currentHealth = data.healthpoints;
-
-        GameObject g = GameObject.Instantiate(data.prefab)
-            as GameObject;
-
-        _transform = g.transform;
-
         _buildingManager = _transform.GetComponent<BuildingManager>();
-
-        // sets the material to mather the "valid' initial state
-        _materials = new List<Material>();
+        _materials = new List<Material>();       
         foreach (Material material in _transform.Find("Mesh").GetComponent<Renderer>().materials)
         {
             _materials.Add(new Material(material));
@@ -90,33 +66,14 @@ public class Building
         _transform.Find("Mesh").GetComponent<Renderer>().materials = materials.ToArray();
     }
 
-    public void SetPosition(Vector3 position)
+    public override void Place()
     {
-        _transform.position = position;
-    }
-
-    public void Place()
-    {
-        //Set Placement State to 'Fixed'
+        base.Place();
+        //Set Placement State 
         _placement = BuildingPlacement.FIXED;
 
         //change building material
         SetMaterials();
-
-        // remove 'isTrigger' flag from box collider to allow
-        // for collisions with units
-        _transform.GetComponent<BoxCollider>().isTrigger = false;
-        // update game resources: remove the cost of the building
-        // from each game resource
-        foreach (ResourceValue resource in _data.cost)
-        {
-            Globals.GAME_RESOURCES[resource.code].AddAmmount(-resource.amount);
-        }
-    }
-
-    public bool CanBuy()
-    {
-        return _data.CanBuy();
     }
 
     public void CheckValidPlacement()
@@ -129,10 +86,6 @@ public class Building
 
     public bool HasValidPlacement { get => _placement == BuildingPlacement.VALID; }
     public bool IsFixed { get => _placement == BuildingPlacement.FIXED; }
-    public string Code { get => _data.code; }
-    public Transform Transform { get => _transform; }
-    public int HP { get => _currentHealth; set => _currentHealth = value; }
-    public int MaxHP { get => _data.healthpoints; }
     public int DataIndex
     {
         get

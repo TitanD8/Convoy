@@ -9,15 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e75af83d5f47be488293b2126366498, type: 3}
+  m_Script: {fileID: 11500000, guid: 591f1fb9c51a64e4d9f8e63658538781, type: 3}
   m_Name: Tower
   m_EditorClassIdentifier: 
-  code: tower
-  unitName: Tower
-  healthpoints: 100
-  prefab: {fileID: 2869076998113401671, guid: 846a912d37cb1d84eb21bbdbb81dcddb, type: 3}
-  cost:
-  - code: stone
-    amount: 100
-  - code: wood
-    amount: 100
+  code: 
+  unitName: 
+  description: 
+  healthpoints: 0
+  prefab: {fileID: 0}
+  cost: []

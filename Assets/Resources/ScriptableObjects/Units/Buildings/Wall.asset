@@ -9,17 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e75af83d5f47be488293b2126366498, type: 3}
+  m_Script: {fileID: 11500000, guid: 591f1fb9c51a64e4d9f8e63658538781, type: 3}
   m_Name: Wall
   m_EditorClassIdentifier: 
-  code: wall
-  unitName: Wall
-  healthpoints: 150
-  prefab: {fileID: 2869076998113401671, guid: b9e0e6469247965478ac4dad26879874, type: 3}
-  cost:
-  - code: wood
-    amount: 50
-  - code: stone
-    amount: 50
-  - code: gold
-    amount: 50
+  code: 
+  unitName: 
+  description: 
+  healthpoints: 0
+  prefab: {fileID: 0}
+  cost: []

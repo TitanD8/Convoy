@@ -9,16 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e75af83d5f47be488293b2126366498, type: 3}
+  m_Script: {fileID: 11500000, guid: 591f1fb9c51a64e4d9f8e63658538781, type: 3}
   m_Name: House
   m_EditorClassIdentifier: 
-  code: House
+  code: house
   unitName: House
-  description: A house increases your population limit by 5
-  healthpoints: 50
+  description: Houses increase your population limit by 5
+  healthpoints: 100
   prefab: {fileID: 2869076998113401671, guid: 78e61d03ebdf18f48849dfccc154b756, type: 3}
   cost:
-  - code: gold
-    amount: 100
   - code: wood
+    amount: 100
+  - code: stone
     amount: 120
