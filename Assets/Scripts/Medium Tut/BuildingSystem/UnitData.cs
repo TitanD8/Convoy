@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Building", menuName = "Scriptable Objects/Building", order = 1)]
-    public class BuildingData : ScriptableObject
+[CreateAssetMenu(fileName = "Unit", menuName = "Scriptable Objects/Unit", order = 1)]
+    public class UnitData : ScriptableObject
 {
     public string code;
     public string unitName;

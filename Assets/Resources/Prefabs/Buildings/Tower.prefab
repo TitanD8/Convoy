@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7eb907e5565c93f4a931c8a463d13e66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthBar: {fileID: 0}
+  _collider: {fileID: 1663140244198047046}
 --- !u!114 &8181742093652534182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,4 +184,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ee9a7ce62ba0ef4abb15aea2ae4bae9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthBar: {fileID: 0}
+  _collider: {fileID: 1663140244198047046}

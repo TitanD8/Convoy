@@ -14,13 +14,17 @@ public class UIManager : MonoBehaviour
     public Transform resourcesUIParent;
     public GameObject gameResourceDisplayPrefab;
 
-    [Header("UnitInfoPanel")]
+    [Header("Unit Info Panel")]
     public GameObject infoPanel;
     public Color invalidTextColor;
     private Text _infoPanelTitleText;
     private Text _infoPanelDescriptionText;
     private Transform _infoPanelResourcesCostParent;
     public GameObject gameResourceCostPrefab;
+
+    [Header("Selected Unit Panel")]
+    public Transform selectedUnitsListParent;
+    public GameObject selectedUnitDisplayPrefab;
 
     private Dictionary<string, Text> _resourceTexts;
     private Dictionary<string, Button> _buildingButtons;
@@ -29,16 +33,23 @@ public class UIManager : MonoBehaviour
     {
         EventManager.AddListener("UpdateResourceTexts", _OnUpdateResourceTexts);
         EventManager.AddListener("CheckBuildingButtons", _OnCheckBuildingButtons);
-        EventManager.AddTypedListener("HoverBuildingButton", _OnHoverBuildingButton);
         EventManager.AddListener("UnhoverBuildingButton", _OnUnhoverBuildingButton);
+
+        EventManager.AddTypedListener("HoverBuildingButton", _OnHoverBuildingButton);
+        EventManager.AddTypedListener("SelectUnit", _OnSelectUnit);
+        EventManager.AddTypedListener("DeselectUnit", _OnDeselectUnit);
+        
     }
 
     private void OnDisable()
     {
         EventManager.RemoveListener("UpdateResourceTexts", _OnUpdateResourceTexts);
         EventManager.RemoveListener("CheckBuildingButtons", _OnCheckBuildingButtons);
-        EventManager.RemoveTypedListener("HoverBuildingButton", _OnHoverBuildingButton);
         EventManager.RemoveListener("UnhoverBuildingButton", _OnUnhoverBuildingButton);
+        
+        EventManager.RemoveTypedListener("HoverBuildingButton", _OnHoverBuildingButton);
+        EventManager.RemoveTypedListener("SelectUnit", _OnSelectUnit);
+        EventManager.RemoveTypedListener("DeselectUnit", _OnDeselectUnit);
     }
 
     // Start is called before the first frame update
@@ -87,8 +98,58 @@ public class UIManager : MonoBehaviour
         }
         
     }
+    private void _OnSelectUnit(CustomEventData data)
+    {
+        _AddSelectedUnitToUIList(data.unit);
+    }
 
-    public void _SetInfoPanel(BuildingData data)
+    private void _OnDeselectUnit(CustomEventData data)
+    {
+        _RemoveSelectedUnitFromUIList(data.unit.Code);
+    }
+
+    public void _AddSelectedUnitToUIList(Unit unit)
+    {
+        // if there is another unit of the same type already selected,
+        // increase the counter
+        Transform alreadyInstantiatedChild = selectedUnitsListParent.Find(unit.Code);
+        if(alreadyInstantiatedChild != null)
+        {
+            Text t = alreadyInstantiatedChild.Find("Count").GetComponent<Text>();
+            int count = int.Parse(t.text);
+            t.text = (count + 1).ToString();
+        }
+
+        // else create a brand new counter initialized with a count of 1
+        else
+        {
+            GameObject g = Instantiate(selectedUnitDisplayPrefab) as GameObject;
+            g.name = unit.Code;
+            Transform t = g.transform;
+            t.Find("Count").GetComponent<Text>().text = "1";
+            t.Find("Name").GetComponent<Text>().text = unit.Data.unitName;
+            t.SetParent(selectedUnitsListParent);
+        }
+    }
+
+    public void _RemoveSelectedUnitFromUIList(string code)
+    {
+        Transform listItem = selectedUnitsListParent.Find(code);
+        if(listItem == null) { return; }
+        Text t = listItem.Find("Count").GetComponent<Text>();
+        int count = int.Parse(t.text);
+        count -= 1;
+        if (count == 0)
+        {
+            DestroyImmediate(listItem.gameObject);
+        }
+        else
+        {
+            t.text = count.ToString();
+        }
+    }
+
+    public void _SetInfoPanel(UnitData data)
     {
         // update texts
         if (data.code != "") { _infoPanelTitleText.text = data.unitName; }
@@ -140,7 +201,7 @@ public class UIManager : MonoBehaviour
 
     private void _OnHoverBuildingButton(CustomEventData data)
     {
-        _SetInfoPanel(data.buildingData);
+        _SetInfoPanel(data.unitData);
         _ShowInfoPanel(true);
     }
 

@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(BoxCollider))]
 public class UnitManager : MonoBehaviour
 {
     private bool _hovered = false;
 
     private Transform _canvas;
     private GameObject _healthbar;
+    public BoxCollider _collider;
+    protected virtual Unit Unit { get; set; }
 
     public void Awake()
     {
@@ -22,6 +25,12 @@ public class UnitManager : MonoBehaviour
     private void OnMouseExit()
     {
         _hovered = false;
+    }
+
+    public void Intialize(Unit unit)
+    {
+        _collider = GetComponent<BoxCollider>();
+        Unit = unit;
     }
 
     // Update is called once per frame
@@ -41,7 +50,7 @@ public class UnitManager : MonoBehaviour
 
     private void _SelectUtil()
     {
-        //if (Globals.SELECTED_UNITS.Contains(this)) return;
+        if (Globals.SELECTED_UNITS.Contains(this)) return;
         Globals.SELECTED_UNITS.Add(this);
 
         if(_healthbar == null)
@@ -55,7 +64,11 @@ public class UnitManager : MonoBehaviour
             );
             h.Initialize(transform, boundingBox.height);
             h.SetPosition();
+
+            
         }
+
+        EventManager.TriggerTypedEvent("SelectUnit", new CustomEventData(Unit));
     }
 
     public void Select() { Select(false, false); }
@@ -95,9 +108,11 @@ public class UnitManager : MonoBehaviour
 
     public void Deselect()
     {
-        //if (!Globals.SELECTED_UNITS.Contains(this)) return;
+        if (!Globals.SELECTED_UNITS.Contains(this)) return;
         Globals.SELECTED_UNITS.Remove(this);
         Destroy(_healthbar);
         _healthbar = null;
+
+        EventManager.TriggerTypedEvent("DeselectUnit", new CustomEventData(Unit));
     }
 }

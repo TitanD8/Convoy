@@ -2,29 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider))]
+
 public class BuildingManager : UnitManager
 {
-    private BoxCollider _collider;
 
     private Building _building;
+    protected override Unit Unit 
+    {
+        get { return _building; }
+        set { _building = value is Building ? (Building)value : null; }
+    }
     private int _nCollisions = 0;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void Intialize(Building building)
     {
-        _collider = GetComponent<BoxCollider>();
+        
         _building = building;
     }
 

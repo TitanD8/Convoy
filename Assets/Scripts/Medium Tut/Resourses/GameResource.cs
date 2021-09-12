@@ -9,7 +9,7 @@ public class GameResource
         _currentAmount = initialAmount;
     }
 
-    public void AddAmmount(int value)
+    public void AddAmount(int value)
     {
         _currentAmount += value;
         if (_currentAmount < 0) _currentAmount = 0;
