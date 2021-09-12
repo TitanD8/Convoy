@@ -26,6 +26,9 @@ public class UIManager : MonoBehaviour
     public Transform selectedUnitsListParent;
     public GameObject selectedUnitDisplayPrefab;
 
+    [Header("Selected Group Indicators")]
+    public Transform selectionGroupsParent;
+
     private Dictionary<string, Text> _resourceTexts;
     private Dictionary<string, Button> _buildingButtons;
 
@@ -96,8 +99,20 @@ public class UIManager : MonoBehaviour
             }
             button.GetComponent<BuildingButton>().Initialize(Globals.BUILDING_DATA[i]);
         }
+
+        // hide all selection group buttons
+        for(int i = 1; i <= 9; i++)
+        {
+            ToggleSelectionGroupButton(i, false);
+        }
         
     }
+
+    public void ToggleSelectionGroupButton(int groupIndex, bool on)
+    {
+        selectionGroupsParent.Find(groupIndex.ToString()).gameObject.SetActive(on);
+    }
+
     private void _OnSelectUnit(CustomEventData data)
     {
         _AddSelectedUnitToUIList(data.unit);
