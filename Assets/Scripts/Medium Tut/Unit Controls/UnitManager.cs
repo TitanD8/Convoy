@@ -10,7 +10,7 @@ public class UnitManager : MonoBehaviour
     private Transform _canvas;
     private GameObject _healthbar;
     public BoxCollider _collider;
-    protected virtual Unit Unit { get; set; }
+    public virtual Unit Unit { get; set; }
 
     public void Awake()
     {

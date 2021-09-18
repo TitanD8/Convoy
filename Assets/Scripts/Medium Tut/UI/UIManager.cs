@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,6 +29,14 @@ public class UIManager : MonoBehaviour
 
     [Header("Selected Group Indicators")]
     public Transform selectionGroupsParent;
+
+    public GameObject selectedUnitMenu;
+    private RectTransform _selectedUnitContentRectTransorm;
+    private RectTransform _selectedUnitButtonsRectTransform;
+    private Text _selectedUnitTitleText;
+    private Text _selectedUnitLevelText;
+    private Transform _selectedUnitResourcesProductoionParent;
+    private Transform _selectedUnitActionButtonsParent;
 
     private Dictionary<string, Text> _resourceTexts;
     private Dictionary<string, Button> _buildingButtons;
@@ -105,7 +114,53 @@ public class UIManager : MonoBehaviour
         {
             ToggleSelectionGroupButton(i, false);
         }
+
+        Transform selectedUnitMenuTransform = selectedUnitMenu.transform;
+        _selectedUnitContentRectTransorm = selectedUnitMenuTransform.Find("Content").GetComponent<RectTransform>();
+        _selectedUnitButtonsRectTransform = selectedUnitMenuTransform.Find("Buttons").GetComponent<RectTransform>();
+        _selectedUnitTitleText = selectedUnitMenuTransform.Find("Content/Title").GetComponent<Text>();
+        _selectedUnitTitleText = selectedUnitMenuTransform.Find("Content/Title").GetComponent<Text>();
+        _selectedUnitLevelText = selectedUnitMenuTransform.Find("Content/Level").GetComponent<Text>();
+        _selectedUnitResourcesProductoionParent = selectedUnitMenuTransform.Find("Content/ResourcesProduction");
+        _selectedUnitActionButtonsParent = selectedUnitMenuTransform.Find("Button/SpecificActions");
+
+        _ShowSelectedUnitMenu(false);
+
         
+    }
+    private void _SetSelectedUnitMenu(Unit unit)
+    {
+        //adapt content panel heights to match info display
+        int contentHeight = 60 + unit.Production.Count * 16;
+        _selectedUnitContentRectTransorm.sizeDelta = new Vector2(60, contentHeight);
+        _selectedUnitButtonsRectTransform.anchoredPosition = new Vector2(0, -contentHeight - 20);
+        _selectedUnitButtonsRectTransform.sizeDelta = new Vector2(60, Screen.height - contentHeight -/*TEST: was 20*/ 50);
+        // update texts
+        _selectedUnitTitleText.text = unit.Data.unitName;
+        _selectedUnitLevelText.text = $"Level{unit.Level}";
+        // clear resource production and reinstantiate a new one
+        foreach (Transform child in _selectedUnitResourcesProductoionParent)
+        {
+            Destroy(child.gameObject);
+        }
+        if(unit.Production.Count > 0)
+        {
+            GameObject g; Transform t;
+            foreach(ResourceValue resource in unit.Production)
+            {
+                g = Instantiate(gameResourceCostPrefab) as GameObject;
+                t = g.transform;
+                t.Find("Text").GetComponent<Text>().text = $"+{resource.amount}";
+                t.Find("Icon").GetComponent<Image>().sprite = Resources.Load<Sprite>($"Textures/GameResources/{resource.code}");
+                t.SetParent(_selectedUnitResourcesProductoionParent);
+            }
+        }
+    }
+
+    private void _ShowSelectedUnitMenu(bool show)
+    {
+        selectedUnitMenu.SetActive(show);
+        BuildingMenu.gameObject.SetActive(!show);
     }
 
     public void ToggleSelectionGroupButton(int groupIndex, bool on)
@@ -116,11 +171,21 @@ public class UIManager : MonoBehaviour
     private void _OnSelectUnit(CustomEventData data)
     {
         _AddSelectedUnitToUIList(data.unit);
+        _SetSelectedUnitMenu(data.unit);
+        _ShowSelectedUnitMenu(true);
     }
 
     private void _OnDeselectUnit(CustomEventData data)
     {
         _RemoveSelectedUnitFromUIList(data.unit.Code);
+        if(Globals.SELECTED_UNITS.Count == 0)
+        {
+            _ShowSelectedUnitMenu(false);
+        }
+        else
+        {
+            _SetSelectedUnitMenu(Globals.SELECTED_UNITS[Globals.SELECTED_UNITS.Count - 1].Unit);
+        }
     }
 
     public void _AddSelectedUnitToUIList(Unit unit)

@@ -7,7 +7,7 @@ public class BuildingManager : UnitManager
 {
 
     private Building _building;
-    protected override Unit Unit 
+    public override Unit Unit 
     {
         get { return _building; }
         set { _building = value is Building ? (Building)value : null; }
