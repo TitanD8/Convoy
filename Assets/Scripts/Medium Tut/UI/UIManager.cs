@@ -35,8 +35,10 @@ public class UIManager : MonoBehaviour
     private RectTransform _selectedUnitButtonsRectTransform;
     private Text _selectedUnitTitleText;
     private Text _selectedUnitLevelText;
-    private Transform _selectedUnitResourcesProductoionParent;
+    private Transform _selectedUnitResourcesProductionParent;
     private Transform _selectedUnitActionButtonsParent;
+    public GameObject unitSkillButtonPrefab;
+    private Unit _selectedUnit;
 
     private Dictionary<string, Text> _resourceTexts;
     private Dictionary<string, Button> _buildingButtons;
@@ -121,8 +123,8 @@ public class UIManager : MonoBehaviour
         _selectedUnitTitleText = selectedUnitMenuTransform.Find("Content/Title").GetComponent<Text>();
         _selectedUnitTitleText = selectedUnitMenuTransform.Find("Content/Title").GetComponent<Text>();
         _selectedUnitLevelText = selectedUnitMenuTransform.Find("Content/Level").GetComponent<Text>();
-        _selectedUnitResourcesProductoionParent = selectedUnitMenuTransform.Find("Content/ResourcesProduction");
-        _selectedUnitActionButtonsParent = selectedUnitMenuTransform.Find("Button/SpecificActions");
+        _selectedUnitResourcesProductionParent = selectedUnitMenuTransform.Find("Content/ResourcesProduction");
+        _selectedUnitActionButtonsParent = selectedUnitMenuTransform.Find("Buttons/SpecificActions");
 
         _ShowSelectedUnitMenu(false);
 
@@ -130,6 +132,7 @@ public class UIManager : MonoBehaviour
     }
     private void _SetSelectedUnitMenu(Unit unit)
     {
+        _selectedUnit = unit;
         //adapt content panel heights to match info display
         int contentHeight = 60 + unit.Production.Count * 16;
         _selectedUnitContentRectTransorm.sizeDelta = new Vector2(60, contentHeight);
@@ -139,20 +142,40 @@ public class UIManager : MonoBehaviour
         _selectedUnitTitleText.text = unit.Data.unitName;
         _selectedUnitLevelText.text = $"Level{unit.Level}";
         // clear resource production and reinstantiate a new one
-        foreach (Transform child in _selectedUnitResourcesProductoionParent)
+        foreach (Transform child in _selectedUnitResourcesProductionParent)
         {
             Destroy(child.gameObject);
         }
-        if(unit.Production.Count > 0)
+            
+        if (unit.Production.Count > 0)
         {
             GameObject g; Transform t;
-            foreach(ResourceValue resource in unit.Production)
+            foreach (ResourceValue resource in unit.Production)
             {
                 g = Instantiate(gameResourceCostPrefab) as GameObject;
                 t = g.transform;
                 t.Find("Text").GetComponent<Text>().text = $"+{resource.amount}";
                 t.Find("Icon").GetComponent<Image>().sprite = Resources.Load<Sprite>($"Textures/GameResources/{resource.code}");
-                t.SetParent(_selectedUnitResourcesProductoionParent);
+                t.SetParent(_selectedUnitResourcesProductionParent);
+            }
+        }
+        // clear skills and reinstatiate new ones
+        foreach (Transform child in _selectedUnitActionButtonsParent)
+        {
+            Destroy(child.gameObject);
+        }
+        if (unit.SkillManagers.Count > 0)
+        {
+            GameObject g; Transform t; Button b;
+            for (int i = 0; i < unit.SkillManagers.Count; i++)
+            {
+                g = Instantiate(unitSkillButtonPrefab) as GameObject;
+                t = g.transform;
+                b = g.GetComponent<Button>();
+                unit.SkillManagers[i].SetButton(b);
+                t.Find("Text").GetComponent<Text>().text = unit.SkillManagers[i].skill.skillName;
+                t.SetParent(_selectedUnitActionButtonsParent);
+                _AddUnitSkillButtonListener(b, i);
             }
         }
     }
@@ -297,10 +320,9 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void _AddUnitSkillButtonListener(Button b, int i)
     {
-        
+        b.onClick.AddListener(() => _selectedUnit.TriggerSkill(i));
     }
 
     private void _AddBuildingButtonListener(Button b, int i)
