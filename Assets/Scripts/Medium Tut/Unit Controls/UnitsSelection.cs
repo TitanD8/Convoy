@@ -63,7 +63,7 @@ public class UnitsSelection : MonoBehaviour
                 //NOTE: I have had to make the creation key Enter as Ctrl + 1 opens
                 //      Sceen View.
 
-                if(Input.GetKey(KeyCode.Return)
+                if(Input.GetKey(KeyCode.Z)
                     //(Input.GetKey(KeyCode.LeftControl) ||
                     //Input.GetKey(KeyCode.RightControl)
                   )

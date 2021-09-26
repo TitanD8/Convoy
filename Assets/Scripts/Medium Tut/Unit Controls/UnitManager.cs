@@ -48,6 +48,8 @@ public class UnitManager : MonoBehaviour
 
     protected virtual bool IsActive() { return true; }
 
+    protected virtual bool IsMovable() { return true; }
+
     private void _SelectUtil()
     {
         if (Globals.SELECTED_UNITS.Contains(this)) return;
@@ -62,7 +64,7 @@ public class UnitManager : MonoBehaviour
                 transform.Find("Mesh").GetComponent<Renderer>().bounds,
                 Camera.main
             );
-            h.Initialize(transform, boundingBox.height);
+            h.Initialize(transform, IsMovable(), boundingBox.height);
             h.SetPosition();
 
             
