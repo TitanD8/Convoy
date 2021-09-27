@@ -49,9 +49,9 @@ public class UIManager : MonoBehaviour
         EventManager.AddListener("CheckBuildingButtons", _OnCheckBuildingButtons);
         EventManager.AddListener("UnhoverBuildingButton", _OnUnhoverBuildingButton);
 
-        EventManager.AddTypedListener("HoverBuildingButton", _OnHoverBuildingButton);
-        EventManager.AddTypedListener("SelectUnit", _OnSelectUnit);
-        EventManager.AddTypedListener("DeselectUnit", _OnDeselectUnit);
+        EventManager.AddListener("HoverBuildingButton", _OnHoverBuildingButton);
+        EventManager.AddListener("SelectUnit", _OnSelectUnit);
+        EventManager.AddListener("DeselectUnit", _OnDeselectUnit);
         
     }
 
@@ -61,9 +61,9 @@ public class UIManager : MonoBehaviour
         EventManager.RemoveListener("CheckBuildingButtons", _OnCheckBuildingButtons);
         EventManager.RemoveListener("UnhoverBuildingButton", _OnUnhoverBuildingButton);
         
-        EventManager.RemoveTypedListener("HoverBuildingButton", _OnHoverBuildingButton);
-        EventManager.RemoveTypedListener("SelectUnit", _OnSelectUnit);
-        EventManager.RemoveTypedListener("DeselectUnit", _OnDeselectUnit);
+        EventManager.RemoveListener("HoverBuildingButton", _OnHoverBuildingButton);
+        EventManager.RemoveListener("SelectUnit", _OnSelectUnit);
+        EventManager.RemoveListener("DeselectUnit", _OnDeselectUnit);
     }
 
     // Start is called before the first frame update
@@ -76,7 +76,7 @@ public class UIManager : MonoBehaviour
         _infoPanelTitleText = infoPanelTransform.Find("Content/Title").GetComponent<Text>();
         _infoPanelDescriptionText = infoPanelTransform.Find("Content/Description").GetComponent<Text>();
         _infoPanelResourcesCostParent = infoPanelTransform.Find("Content/ResourcesCost");
-        _ShowInfoPanel(false);
+        ShowInfoPanel(false);
 
         //Create texts for each in-game resource (gold, wood, stone)
         _resourceTexts = new Dictionary<string, Text>();
@@ -191,16 +191,18 @@ public class UIManager : MonoBehaviour
         selectionGroupsParent.Find(groupIndex.ToString()).gameObject.SetActive(on);
     }
 
-    private void _OnSelectUnit(CustomEventData data)
+    private void _OnSelectUnit(object data)
     {
-        _AddSelectedUnitToUIList(data.unit);
-        _SetSelectedUnitMenu(data.unit);
+        Unit unit = (Unit)data;
+        _AddSelectedUnitToUIList(unit);
+        _SetSelectedUnitMenu(unit);
         _ShowSelectedUnitMenu(true);
     }
 
-    private void _OnDeselectUnit(CustomEventData data)
+    private void _OnDeselectUnit(object data)
     {
-        _RemoveSelectedUnitFromUIList(data.unit.Code);
+        Unit unit = (Unit)data;
+        _RemoveSelectedUnitFromUIList(unit.Code);
         if(Globals.SELECTED_UNITS.Count == 0)
         {
             _ShowSelectedUnitMenu(false);
@@ -284,7 +286,7 @@ public class UIManager : MonoBehaviour
 
         
     }
-    public void _ShowInfoPanel(bool show)
+    public void ShowInfoPanel(bool show)
     {
         infoPanel.SetActive(show);
     }
@@ -302,15 +304,15 @@ public class UIManager : MonoBehaviour
         _resourceTexts[resource].text = value.ToString();
     }
 
-    private void _OnHoverBuildingButton(CustomEventData data)
+    private void _OnHoverBuildingButton(object data)
     {
-        _SetInfoPanel(data.unitData);
-        _ShowInfoPanel(true);
+        _SetInfoPanel((UnitData)data);
+        ShowInfoPanel(true);
     }
 
     private void _OnUnhoverBuildingButton()
     {
-        _ShowInfoPanel(false);
+        ShowInfoPanel(false);
     }
     private void _OnUpdateResourceTexts()
     {

@@ -5,12 +5,15 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Collections.Generic;
 
+[System.Serializable]
+public class TypedEvent : UnityEvent<object> { }
+
 public class EventManager : MonoBehaviour
 {
-    private Dictionary<string, CustomEvent> _typedEvents;
+    private Dictionary<string, TypedEvent> _typedEvents;
     private Dictionary<string, UnityEvent> _events;
     private static EventManager _eventManager;
-    private UIManager _uiManager;
+    //private UIManager _uiManager;
 
     public static EventManager instance
     {
@@ -35,7 +38,7 @@ public class EventManager : MonoBehaviour
         if (_events == null)
         {
             _events = new Dictionary<string, UnityEvent>();
-            _typedEvents = new Dictionary<string, CustomEvent>();
+            _typedEvents = new Dictionary<string, TypedEvent>();
         }
     }
 
@@ -54,16 +57,16 @@ public class EventManager : MonoBehaviour
         }
     }
 
-    public static void AddTypedListener(string eventName, UnityAction<CustomEventData> listener)
+    public static void AddListener(string eventName, UnityAction<object> listener)
     {
-        CustomEvent evt = null;
+        TypedEvent evt = null;
         if(instance._typedEvents.TryGetValue(eventName, out evt))
         {
             evt.AddListener(listener);
         }
         else
         {
-            evt = new CustomEvent();
+            evt = new TypedEvent();
             evt.AddListener(listener);
             instance._typedEvents.Add(eventName, evt);
         }
@@ -77,10 +80,10 @@ public class EventManager : MonoBehaviour
             evt.RemoveListener(listener);
     }
 
-    public static void RemoveTypedListener(string eventName, UnityAction<CustomEventData> listener)
+    public static void RemoveListener(string eventName, UnityAction<object> listener)
     {
         if (_eventManager == null) return;
-        CustomEvent evt = null;
+        TypedEvent evt = null;
         if(instance._typedEvents.TryGetValue(eventName, out evt))
         {
             evt.RemoveListener(listener);
@@ -91,36 +94,37 @@ public class EventManager : MonoBehaviour
     {
         UnityEvent evt = null;
         if (instance._events.TryGetValue(eventName, out evt))
+        {
             evt.Invoke();
+        }
+            
     }
-
-    public static void TriggerTypedEvent(string eventName, CustomEventData data)
+    public static void TriggerEvent(string eventName, object data)
     {
-        CustomEvent evt = null;
-        if(instance._typedEvents.TryGetValue(eventName, out evt))
+        TypedEvent evt = null;
+        if (instance._typedEvents.TryGetValue(eventName, out evt))
         {
             evt.Invoke(data);
         }
+            
     }
 }
 
-public class CustomEventData
+/*public class TypedEventData
 {
     public UnitData unitData;
     public Unit unit;
 
-    public CustomEventData(UnitData unitData)
+    public TypedEventData(UnitData unitData)
     {
         this.unitData = unitData;
         this.unit = null;
     }
 
-    public CustomEventData(Unit unit)
+    public TypedEventData(Unit unit)
     {
         this.unit = unit;
         this.unitData = null;
     }
-}
+}*/
 
-[System.Serializable]
-public class CustomEvent : UnityEvent<CustomEventData> { }

@@ -70,7 +70,7 @@ public class UnitManager : MonoBehaviour
             
         }
 
-        EventManager.TriggerTypedEvent("SelectUnit", new CustomEventData(Unit));
+        EventManager.TriggerEvent("SelectUnit", Unit);
     }
 
     public void Select() { Select(false, false); }
@@ -115,6 +115,6 @@ public class UnitManager : MonoBehaviour
         Destroy(_healthbar);
         _healthbar = null;
 
-        EventManager.TriggerTypedEvent("DeselectUnit", new CustomEventData(Unit));
+        EventManager.TriggerEvent("DeselectUnit", Unit);
     }
 }
